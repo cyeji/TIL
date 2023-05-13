@@ -135,3 +135,34 @@ class Data {
 }
 
 ```
+
+## 옵션 처리
+
+- Member는 스프링 빈이 아니다.
+- setNoBean1() 은 @Autowired(required=false)이므로 호출 자체가 안된다.
+
+```java
+
+static class TestBean {
+
+    // 호출 안됨
+    // member가 Bean등록, member==null, exception
+    // member가 Bean등록안되어있음, member==null, 빈값 호출
+    @Autowired(required = false)
+    public void setNoBean1(Member noBean1) {
+        System.out.println("noBean1 = " + noBean1);
+    }
+
+    // NULL 호출
+    @Autowired
+    public void setNpBean2(@Nullable Member noBean2) {
+        System.out.println("noBean2 = " + noBean2);
+    }
+
+    // Optional.empty 호출
+    @Autowired
+    public void setNoBean3(Optional<Member> noBean3) {
+        System.out.println("noBean3 = " + noBean3);
+    }
+}
+```
