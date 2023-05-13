@@ -1,12 +1,13 @@
 # 스프링 입문
 
-![IMG_C73CAA29DA51-1.jpeg](..%2F..%2F..%2F..%2F..%2FDownloads%2FIMG_C73CAA29DA51-1.jpeg)
+![IMG_C73CAA29DA51-1](https://github.com/cyeji/TIL/assets/98408267/dc237c28-ccd6-4f1e-9b10-d9ae3f853ace)
 
 - 컨트롤러에서 리턴 값으로 문자를 반환하면 뷰 리졸버 (ViewResolver)가 화면을 찾아서 처리한다.
   - 스프링부트 템플릿 엔진 기본 viewName 매핑
   - resource:templates/{viewName}.html
 
-![IMG_147B5681CB35-1.jpeg](..%2F..%2F..%2F..%2F..%2FDownloads%2FIMG_147B5681CB35-1.jpeg)
+![IMG_147B5681CB35-1](https://github.com/cyeji/TIL/assets/98408267/1b01ac66-d4ae-4422-a00d-69937c914a58)
+
 
 - @ResponseBody를 사용
   - Http의 Body의 문자 내용을 직접 반환 viewResolver 대신에 HttpMessageConverter가 동작
