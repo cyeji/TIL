@@ -166,3 +166,127 @@ static class TestBean {
     }
 }
 ```
+
+## 생성자 주입을 사용하자
+
+**불변** </br>
+- 대부분 의존관계 주입은 한번 일어나면 애플리케이션 종료시점까지 의존관계를 변경할 일이 없다. 오히려 대부분의 의존관계를 애플리케이션</br>
+종료 전까지는 변하면 안된다 (불변)
+- 수정자 주입 사용시, setXXX() 메소드를 public으로 열어두어야 한다.
+- 누군가 실수로 변경할 수도 있고, 변경하면 안되는 메소드를 열어두는 것은 좋은 설계 방법이 아니다.
+- 생성자 주입은 객체를 생성할 때 딱 1번만 호출되므로 이후에 호출되는 일이 없다. 따라서 불변하게 설계가능
+</br>
+**누락** </br>
+프레임워크 없이 순수한 자바 코드를 단위 테스트 하는 경우
+</br>
+**final 키워드** </br>
+생성자 주입을 사용하면 필드에 final 키워드를 사용할 수 있다. 그래서 생성자에서 혹시라도 값이 설정되지 않는 오류를 컴파일 시점에 막아준다.
+
+
+## 빈 충돌 시 해결법
+
+1. @Autowired로 필드명 매칭
+2. @Qualifier -> @Qualifier끼리 매칭 -> 빈 이름 매칭
+3. @Primary 사용
+
+### @Autowired 필드 명 매칭
+
+@Autowired는 타입 매칭을 시도하고, 이 때 여러 빈이 있으면 필드 이름, 파라미터 이름으로 빈 이름을 추가 매칭한다.
+
+<br></br>
+
+**기존코드**
+
+```java
+
+@Autowired
+private DiscountPolicy discountPolicy;
+
+```
+</br>**필드 명을 빈 이름으로 변경**
+
+```java
+
+@Autowired
+private DiscountPolicy rateDiscountPolicy;
+
+```
+
+필드 명이 rateDiscountPolicy이므로 정상 주입된다. </br>
+필드 명 매칭은 먼저 타입 매칭을 시도하고 그 결과 여러 빈이 있을 때 추가로 동작하는 기능
+
+### @Qualifier 사용
+
+추가 구분자를 붙여주는 방법. 주입 시 추가적인 방법을 제공하는 것이지 빈 이름을 변경하는 것은 아니다. </br>
+@Qualifier 사용 시, 선언한 어노테이션 끼리 매칭, 없을 경우 빈 이름으로 매칭, 둘다 없을 경우 NoSuchBeanDefinitionException 예외 발생
+
+
+- RateDiscountPolicy
+
+```java
+
+@Component
+@Qualifier("mainDiscountPolicy")
+public class RateDiscountPolicy implements DiscountPolicy {
+    
+}
+
+```
+
+- FixDiscountPolicy
+
+```java
+
+@Component
+@Qualifier("subDiscountPolicy")
+public class FixDiscountPolicy implements DiscountPolicy {
+
+}
+
+```
+
+- OrderService에서 @Autowired를 통한 의존성 주입
+
+```java
+
+@Component
+public class OrderServiceImpl implements OrderService {
+
+  @Autowired
+  public OrderServiceImpl(MemberRepository memberRepository, @Qualifier("mainDiscountPolicy") DiscountPolicy discountPolicy) {
+    this.memberRepository = memberRepository;
+    this.discountPolicy = discountPolicy;
+  }
+  
+}
+
+```
+
+### @Primary 사용
+
+@Primary는 우선순위를 정하는 방법이다. @Autowired시에 여러 빈이 매칭되면 @Primary가 우선 권을 가진다.
+
+```java
+
+@Component
+@Primary
+public class RateDiscountPolicy implements DiscountPolicy {
+    
+}
+
+```
+
+### @Primary, @Qualifier 활용
+
+코드에서 자주 사용하는 메인 데이터베이스의 커넥션을 획득하는 스프링 빈이 있고, 코드에서 특별한 기능으로 가끔 사용하는 서브 데이터베이스의 </br>
+커넥션을 획득하는 스프링 빈이 있다고 가정하자. 메인 데이터베이스를 연결하는 스프링 빈은 @Primary를 적용해서 조회하는 곳에서</br>
+@Qualifier 지정 없이 편리하게 조회되고, 서브 데이터베이스 커넥션 빈을 획득할 때는 @Qualifier를 지정해서 명시적으로 획득하는 방식으로 사용하면</br>
+코드를 깔끔하게 유지할 수 있다. 물론 이때 메인 데이터베이스의 스프링 빈 등록 시 @Qualifier를 지정해줘도 상관없다.
+
+### 우선순위
+
+@Primary는 기본값처럼 동작하는 것이고, @Qualifier는 매우 섬세하게 동작한다. </br>
+이런 경우 어떤 것이 우선권을 가져갈까? </br>
+스프링은 자동보다는 수동, 넓은 범위의 선택권 보다는 좁은 범위의 선택권이 우선순위가 높다. </br>
+따라서 @Qualifier가 우선순위가 높다.
+
