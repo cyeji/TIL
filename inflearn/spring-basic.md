@@ -1,5 +1,69 @@
 # 스프링 입문
 
+## 웹 개발 방식 3가지
+
+1. 정적 컨텐츠
+
+static 폴더에 html파일 생성
+
+2. MVC와 탬플릿 엔진
+
+```java
+
+@Controller
+public class HelloController{ 
+    
+  @GetMapping("/hello-mvc")
+  public String helloMvc(@RequestParam("name") String name, Model model){
+      model.addAttribute("name", name);
+      return  "hello";
+  }
+  
+}
+
+```
+
+3. API
+
+- @ResponseBody 사용
+  - HTTP의 BODY에 문제 내용을 직접 반환
+  - viewResolver대신에 HttpMessageConverter가 동작
+  - 기본 문자처리 : StringHtttpMessageConverter;
+  - 기본 객체처리 : MappingJackson2HttpMessageConverter
+  - byte처리 등등 기타 여러 HttpMessageConverter가 기본으로 등록되어 있음
+
+```java
+
+@Controller
+public class HelloController{ 
+    
+  @ResponseBody
+  @GetMapping("/hello-api")
+  public Hello helloMvc(@RequestParam("name") String name){
+      Hello hello = new Hello();
+      hello.setName(name);
+      return hello;
+  }
+  
+  static class Hello{
+      private final String name;
+      
+      private Hello(String name){
+          this.name = name;
+      }
+      
+      public String getName(){
+          return name;
+      }
+      
+      public void setName(String name){
+          this.name = name;
+      }
+  }
+}
+
+```
+
 ![IMG_C73CAA29DA51-1](https://github.com/cyeji/TIL/assets/98408267/dc237c28-ccd6-4f1e-9b10-d9ae3f853ace)
 
 - 컨트롤러에서 리턴 값으로 문자를 반환하면 뷰 리졸버 (ViewResolver)가 화면을 찾아서 처리한다.
