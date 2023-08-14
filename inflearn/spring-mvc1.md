@@ -1,3 +1,10 @@
+# SpringMVC
+
+## 개요
+
+김영한님 강의 수강 하면서 내용 기록 </br>
+프로젝트 [springMVC1편](https://github.com/cyeji/spring-mvc)
+
 ## 웹 어플리케이션 이해
 
 ### 웹 서버 (Web Server)
