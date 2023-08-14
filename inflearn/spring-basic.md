@@ -214,18 +214,4 @@ public class SpringConfig{
 
 ```
 
-## HTTP 요청 데이터
-3가지 방법을 통해 클라이언트에서 서버로 데이터 전달
 
-1. GET - 쿼리파라미터
-   - /url?username=hello&age=20
-   - 메세지 바디 없이 URL의 쿼리 파라미터에 데이터를 포함해서 전달
-   - 예) 검색 필터, 페이징등에서 많이 사용하는 형식
-2. POST - HTML Form
-   - content-type : application/x-www-form-urlencoded
-   - 메시지 바디에 쿼리 파라미터 형식으로 전달 username=hello&age=20
-   - 예) 회원가입, 상품주문, HTML Form 사용
-3. POST - message body에 데이터 직접 당아서 사용
-   - HTTP API에서 주로 사용 JSON, XML, TEXT
-   - 데이터 형식은 주로 JSON
-   - POST, PUT, PATCH
