@@ -199,3 +199,18 @@ public class HelloServlet extends HttpServlet{
    - HTTP API에서 주로 사용 JSON, XML, TEXT
    - 데이터 형식은 주로 JSON
    - POST, PUT, PATCH
+
+### Redirect VS Forward
+
+```
+리다이렉트는 실제 클라이언트(웹 브라우저)에 응답이 나갔다가 클라이언트가 리다이렉트 경로로 다시 요청한다. 따라서
+클라이언트가 인지할 수 있고, URL경로도 실제로 변경된다. 반면에 포워드는 서버 내부에서 일어나는 호출이기 때문에 클라이언트가 전혀 인지하지 못한다.
+```
+
+### springMVC 구조의 이해
+
+#### DispatcherServlet구조 살펴보기
+
+- springMVC 프론트 컨트롤러 패턴으로 구현되어 있다.
+- springMVC 프론트 컨트롤러가 바로 디스패치서블릿이다.
+
